@@ -19,7 +19,7 @@ namespace VRRoboticArm.ProductionLine
 
         public bool buildOnStart = true;
 
-        [Header("Table (robot stands on it)")]
+        [Header("Pedestal (robot and conveyor stand on it)")]
         [Tooltip("Height of the robot base above the floor (0.63 m in niryo_one.urdf).")]
         public float tableHeight = 0.63f;
 
@@ -60,10 +60,14 @@ namespace VRRoboticArm.ProductionLine
                 return;
             }
 
-            root = new GameObject("Production Line (generated)").transform;
-            root.SetParent(transform, true); // keeps a neutral world transform even if this object is moved
+            // The robot base must never move, otherwise the line is no longer in reach.
+            var baseBody = robotBase.GetComponent<ArticulationBody>();
+            if (baseBody != null) baseBody.immovable = true;
 
-            BuildTable();
+            // Created at the scene root so the builder object's own transform has no effect.
+            root = new GameObject("Production Line (generated)").transform;
+
+            BuildPedestal();
             var score = BuildScoreBoard();
             BuildConveyor(score);
             BuildBins(score);
@@ -72,18 +76,20 @@ namespace VRRoboticArm.ProductionLine
 
         // ---------------------------------------------------------------- parts of the line
 
-        void BuildTable()
+        /// <summary>
+        /// Solid block from the floor up to the robot base, carrying the robot, the conveyor and the bins.
+        /// Its top is 2 mm below the robot base so it never touches the robot's colliders.
+        /// </summary>
+        void BuildPedestal()
         {
-            var table = Group("Table");
+            var pedestal = Group("Pedestal");
             float x0 = -0.32f, x1 = conveyorDistance + conveyorWidth / 2f + 0.15f;
             float halfY = conveyorLength / 2f + 0.15f;
-            float cx = (x0 + x1) / 2f, sx = x1 - x0;
+            float h = tableHeight - 0.002f;
 
-            Box("Top", table, new Vector3(cx, 0f, -0.02f), new Vector3(sx, 2f * halfY, 0.04f), Steel);
-            float legH = tableHeight - 0.04f;
-            foreach (float lx in new[] { x0 + 0.04f, x1 - 0.04f })
-                foreach (float ly in new[] { -halfY + 0.04f, halfY - 0.04f })
-                    Box("Leg", table, new Vector3(lx, ly, -0.04f - legH / 2f), new Vector3(0.05f, 0.05f, legH), DarkSteel);
+            Box("Block", pedestal, new Vector3((x0 + x1) / 2f, 0f, -0.002f - h / 2f), new Vector3(x1 - x0, 2f * halfY, h), Steel);
+            // Yellow safety band along the top edge facing the user.
+            Box("Edge Band", pedestal, new Vector3(x1 + 0.001f, 0f, -0.03f), new Vector3(0.004f, 2f * halfY, 0.04f), SafetyYellow, false);
         }
 
         void BuildConveyor(ProductionScore score)
@@ -164,11 +170,12 @@ namespace VRRoboticArm.ProductionLine
         {
             var board = Group("Score Board");
             // Behind the robot, facing the user (who stands in front of the conveyor).
-            Box("Panel", board, new Vector3(-0.42f, 0f, 0.45f), new Vector3(0.02f, 0.5f, 0.3f), DarkSteel);
+            Box("Post", board, new Vector3(-0.30f, 0f, 0.15f), new Vector3(0.03f, 0.03f, 0.3f), DarkSteel);
+            Box("Panel", board, new Vector3(-0.30f, 0f, 0.45f), new Vector3(0.02f, 0.5f, 0.3f), DarkSteel);
 
             var textGo = new GameObject("Score Text");
             textGo.transform.SetParent(board, false);
-            textGo.transform.position = P(-0.40f, 0f, 0.45f);
+            textGo.transform.position = P(-0.285f, 0f, 0.45f);
             textGo.transform.rotation = robotBase.rotation * Quaternion.LookRotation(Vector3.back);
 
             var text = textGo.AddComponent<TextMesh>();
