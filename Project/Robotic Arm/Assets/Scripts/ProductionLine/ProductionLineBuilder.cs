@@ -14,7 +14,7 @@ namespace VRRoboticArm.ProductionLine
     /// </summary>
     public class ProductionLineBuilder : MonoBehaviour
     {
-        [Tooltip("The robot's base_link. Empty = found by name.")]
+        [Tooltip("The robot's base_link (the object with the ArticulationBody). Empty = found automatically.")]
         public Transform robotBase;
 
         public bool buildOnStart = true;
@@ -270,10 +270,15 @@ namespace VRRoboticArm.ProductionLine
             if (r != null) r.material.color = color;
         }
 
+        /// <summary>
+        /// The robot's base_link is the ArticulationBody with that name. Searching by GameObject name
+        /// is not enough: the imported meshes contain other objects also called "base_link".
+        /// </summary>
         static Transform FindBase()
         {
-            var go = GameObject.Find("base_link");
-            return go != null ? go.transform : null;
+            foreach (var body in FindObjectsByType<ArticulationBody>(FindObjectsSortMode.None))
+                if (body.name == "base_link") return body.transform;
+            return null;
         }
 
         void OnDrawGizmosSelected()
