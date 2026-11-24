@@ -7743,6 +7743,9 @@ GameObject:
   - component: {fileID: 965995561}
   - component: {fileID: 965995560}
   - component: {fileID: 965995559}
+  - component: {fileID: 965995563}
+  - component: {fileID: 965995562}
+  - component: {fileID: 965995564}
   m_Layer: 0
   m_Name: niryo_one
   m_TagString: robot
@@ -7809,6 +7812,62 @@ Transform:
   - {fileID: 731573177}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &965995562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965995558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64fc6e8cb6544077a944076277a31158, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VRRoboticArm.Robot.ArmIKFollower
+  target: {fileID: 0}
+  createTestTargetIfMissing: 1
+  followTarget: 1
+  orientationMode: 1
+  orientationWeight: 0.3
+  toolOffset: 0.06
+  iterationsPerStep: 10
+  runSelfCheck: 1
+--- !u!114 &965995563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965995558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b02f81fc18a4f1bb24c449b6eb037f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VRRoboticArm.Robot.RobotArmController
+  stiffness: 10000
+  damping: 100
+  forceLimit: 1000
+  maxJointSpeed: 90
+  disableUrdfKeyboardController: 1
+--- !u!114 &965995564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965995558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 200fa1f9120e4a72b56347eb920910c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VRRoboticArm.Robot.GripperController
+  openPosition: 0.01
+  closedPosition: -0.01
+  openAmount: 1
+  speed: 3
+  stiffness: 10000
+  damping: 100
+  forceLimit: 1000
 --- !u!1001 &977352813
 PrefabInstance:
   m_ObjectHideFlags: 0
