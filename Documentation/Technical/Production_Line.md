@@ -10,7 +10,7 @@ Coloured parts (red, green, blue) arrive on a conveyor in front of the robot. Th
 
 | Script | Role |
 |---|---|
-| `ProductionLineBuilder.cs` | Builds everything on Play: solid pedestal under the robot, conveyor, spawner, stop zone, 3 bins, score board, simple factory hall. |
+| `ProductionLineBuilder.cs` | Builds everything on Play: conveyor, spawner, stop zone, 3 bins, score board. Optional: pedestal under the robot and simple factory hall (both off by default for mixed reality). |
 | `ConveyorBelt.cs` | Moves the parts lying on the belt (kinematic Rigidbody trick: the belt is moved back, then forward with `MovePosition`, so friction drags the parts). |
 | `PartSpawner.cs` | Drops a part of random colour every few seconds (never too close to the previous one). |
 | `ProductionPart.cs` | Colour of a part (`PartColor`), removed if it falls far. |
@@ -31,6 +31,6 @@ All positions are given in the robot frame (metres from the robot base: x in fro
 ## Notes
 
 - The builder locks the robot base (`ArticulationBody.immovable`) so the robot cannot be pushed away from the line.
-- The factory hall is a simple placeholder (floor, walls, pillars, safety lines). Untick **Create Factory Hall** when a factory asset pack is imported.
+- Mixed reality: **Create Pedestal** and **Create Factory Hall** are off, so only the robot, the conveyor, the bins, the parts and the score board are virtual; the real room and table are seen through passthrough. Tick them again for a fully virtual (VR) version.
 - Part size is 3 cm because the Niryo gripper opening is small; picking itself (attaching the part to the gripper) is a separate task.
 - Not yet run inside Unity: the scripts compile against the Unity API signatures, but sizes, speed and friction may need tuning.

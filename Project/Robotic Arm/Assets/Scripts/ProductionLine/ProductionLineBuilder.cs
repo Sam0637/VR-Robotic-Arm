@@ -4,8 +4,8 @@ namespace VRRoboticArm.ProductionLine
 {
     /// <summary>
     /// Builds a small production line around the Niryo One when Play starts:
-    /// table, conveyor, part spawner, stop zone in front of the robot, 3 sorting bins,
-    /// score board, and (optionally) a simple factory hall.
+    /// conveyor, part spawner, stop zone in front of the robot, 3 sorting bins and score board.
+    /// Optional (off by default, for mixed reality): a pedestal under the robot and a simple factory hall.
     ///
     /// Usage: create an empty GameObject, add this component, press Play.
     /// Positions are given in the robot frame (x = in front of the robot, y = robot's left,
@@ -20,6 +20,9 @@ namespace VRRoboticArm.ProductionLine
         public bool buildOnStart = true;
 
         [Header("Pedestal (robot and conveyor stand on it)")]
+        [Tooltip("Off for mixed reality: the real table carries the robot and the conveyor.")]
+        public bool createPedestal = false;
+
         [Tooltip("Height of the robot base above the floor (0.63 m in niryo_one.urdf).")]
         public float tableHeight = 0.63f;
 
@@ -32,7 +35,8 @@ namespace VRRoboticArm.ProductionLine
         public float spawnInterval = 4f;
 
         [Header("Factory hall")]
-        public bool createFactoryHall = true;
+        [Tooltip("Off for mixed reality: the real room is seen through the headset cameras.")]
+        public bool createFactoryHall = false;
         public float hallSize = 16f;
         public float hallHeight = 6f;
 
@@ -67,7 +71,7 @@ namespace VRRoboticArm.ProductionLine
             // Created at the scene root so the builder object's own transform has no effect.
             root = new GameObject("Production Line (generated)").transform;
 
-            BuildPedestal();
+            if (createPedestal) BuildPedestal();
             var score = BuildScoreBoard();
             BuildConveyor(score);
             BuildBins(score);

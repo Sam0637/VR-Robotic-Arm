@@ -772,7 +772,7 @@ MonoBehaviour:
   conveyorWidth: 0.12
   conveyorSpeed: 0.06
   spawnInterval: 4
-  createFactoryHall: 1
+  createFactoryHall: 0
   hallSize: 16
   hallHeight: 6
 --- !u!4 &41972559
