@@ -28,6 +28,9 @@ namespace VRRoboticArm.ProductionLine
             var part = other.GetComponentInParent<ProductionPart>();
             if (part == null || part.Counted) return;
 
+            var body = part.GetComponent<Rigidbody>();
+            if (body != null && body.isKinematic) { timers.Remove(part); return; }
+
             timers.TryGetValue(part, out float t);
             t += Time.fixedDeltaTime;
             timers[part] = t;
